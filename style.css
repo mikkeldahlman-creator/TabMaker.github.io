@@ -1,0 +1,65 @@
+.png {
+  box-sizing: content-box;
+  height: 70px;
+  width: 110px;
+  margin-top: -10px;
+}
+
+/* Layout */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 13%;
+  min-width: 90px;
+  background: #f2f2f2;
+  padding: 12px 8px;
+  border-right: 1px solid #ddd;
+  font-size: 14px;
+}
+
+/* Content area */
+.content {
+  flex: 1;
+}
+
+/* Sidebar elements */
+.sidebar-section {
+  margin-bottom: 18px;
+}
+
+.sidebar-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.sidebar-item {
+  display: block;
+  padding: 6px 8px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.sidebar-item:hover {
+  background: #e6e6e6;
+}
+
+.sidebar-item.active {
+  background: #ddd;
+  font-weight: 500;
+}
+
+/* Search */
+.sidebar-search {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+}

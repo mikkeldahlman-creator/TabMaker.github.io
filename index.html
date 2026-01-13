@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TabMaker</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .offcanvas.open {
+      visibility: visible;
+      transform: translateX(0);
+    }
+  </style>
+  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+
+<body>
+
+  <div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <input type="text" class="sidebar-search" placeholder="Search">
+    </div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-title">Profile</p>
+      <a href="#" class="sidebar-item active">My Profile</a>
+    </div>
+
+    <div class="sidebar-section">
+      <p class="sidebar-title">My tabs</p>
+      <a href="#" class="sidebar-item">Create Tab</a>
+      <a href="#" class="sidebar-item">Saved Tabs</a>
+      <a href="#" class="sidebar-item">Shared Tabs</a>
+    </div>
+  </aside>
+
+  <!-- Resten av siden -->
+  <div class="content">
+    <!-- NAV + MAIN flyttes hit -->
+
+
+  <!-- Top Section -->
+ <nav class="navbar navbar-expand-lg bg-body-tertiary"> 
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><img src="Nettsidelogo.png" alt="Nettsidelogo" class="png"></a>
+    <span id="authUserBadge"></span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+      </ul>
+    </div>
+    <div class="d-flex ms-2">
+      <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#authPanel" aria-controls="authPanel">Logg inn</button>
+    </div>
+  </div>
+</nav>
+  <!-- Login offcanvas (kept) -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="authPanel" aria-labelledby="offcanvasLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasLabel">Profile</h5>
+      <button id="authCloseBtn" type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+      <aside class="auth-panel">
+
+        <div id="authLoggedOut">
+
+          <div class="d-flex gap-2 mb-3">
+            <button class="btn btn-sm btn-outline-dark active" data-tab="login">Logg inn</button>
+            <button class="btn btn-sm btn-outline-dark" data-tab="signup">Opprett profil</button>
+          </div>
+
+          <!-- Logg inn -->
+          <form id="loginForm" data-panel="login">
+            <input class="form-control mb-2" type="email" id="loginEmail" placeholder="E-post" required>
+            <input class="form-control mb-3" type="password" id="loginPass" placeholder="Passord" required>
+            <button class="btn btn-dark w-100 mb-2" type="submit">Logg inn</button>
+          </form>
+          <div id="loginMsg"></div>
+
+          <!-- Opprett bruker -->
+          <form id="signupForm" data-panel="signup" style="display:none;">
+            <input class="form-control mb-2" type="text" id="signupName" placeholder="Brukernavn">
+            <input class="form-control mb-2" type="email" id="signupEmail" placeholder="E-post" required>
+            <input class="form-control mb-3" type="password" id="signupPass" placeholder="Passord (min. 6 tegn)" required>
+            <button class="btn btn-dark w-100 mb-2" type="submit">Opprett profil</button>
+          </form>
+          <div id="signupMsg"></div>
+
+        </div>
+
+        <!-- Innlogget -->
+        <div id="authLoggedIn" style="display:none;">
+          <p class="small text-muted mb-1" id="whoami"></p>
+          <p class="small text-muted mb-1" id="roleBadge"></p>
+          <button id="logoutBtn" class="btn btn-outline-dark w-100">Logg ut</button>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <section class="top-tabs card shadow-sm p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="h5 mb-0">Top Tabs</h2>
+            <div class="btn-group btn-group-sm" role="group" aria-label="filters">
+            </div>
+          </div>
+
+          <ol class="tabs-list list-group list-group-numbered">
+            <li class="list-group-item"></li>
+            <li class="list-group-item"></li>
+            <li class="list-group-item"></li>
+          </ol>
+        </section>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+ 
+</body>
