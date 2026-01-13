@@ -1,6 +1,6 @@
-// login.js — standalone auth logic using Supabase UMD (window.supabase)
+// login.js — En login løsning laget med hjelp av Supabase.
 
-// Helper: ensure UMD supabase is available, load fallback if needed
+// Denne passer på at supabase fungerer, hvis ikke så sier den ifra i console.
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script');
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (openBtn && panel) openBtn.addEventListener('click', () => panel.classList.add('show'));
   if (closeBtn && panel) closeBtn.addEventListener('click', () => panel.classList.remove('show'));
 
-  // Tab switching
+  // Bytter imellom opprett bruker og logg inn.
   tabButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       tabButtons.forEach((b) => b.classList.remove('active'));
