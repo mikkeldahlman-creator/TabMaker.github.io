@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
     if (typeof window.supabase !== 'undefined' || typeof window.supabaseClient !== 'undefined') {
-      console.log('Supabase detected — skipping main.js fallback login handler');
+      console.log('Supabase detected — skipping login.js fallback login handler');
     } else {
       loginForm.addEventListener('submit', function (ev) {
         ev.preventDefault();

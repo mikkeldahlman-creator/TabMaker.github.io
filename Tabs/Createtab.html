@@ -7,7 +7,7 @@
   <title>TabMaker</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../style.css">
   <style>
     .offcanvas.open {
       visibility: visible;
@@ -20,7 +20,7 @@
 <body>
 
 <!-- Sidebar med tilgang til tabs og profile ja, du skjønner -->
-<div class="app-layout">
+<div class="sidelayout">
   <aside class="sidebar">
     <div class="sidebar-section">
       <input type="text" class="sidebar-search" placeholder="Search">
@@ -28,14 +28,14 @@
 
     <div class="sidebar-section"> 
       <p class="sidebar-title">Profile</p>
-      <a href="./Tabs/Profile.html" class="sidebar-item">My Profile</a>
+      <a href="Profile.html" class="sidebar-item">My Profile</a>
     </div>
 
     <div class="sidebar-section">
       <p class="sidebar-title">My tabs</p>
-      <a href="./Tabs/Createtab.html" class="sidebar-item">Create Tab</a>
-      <a href="./Tabs/Savedtab.html" class="sidebar-item">Saved Tabs</a>
-      <a href="./Tabs/Sharedtab.html" class="sidebar-item">Shared Tabs</a>
+      <a href="Createtab.html" class="sidebar-item active">Create Tab</a>
+      <a href="Savedtab.html" class="sidebar-item">Saved Tabs</a>
+      <a href="Sharedtab.html" class="sidebar-item">Shared Tabs</a>
     </div>
   </aside>
 
@@ -45,7 +45,7 @@
   <!-- Navbar med logoen, skal legge til mere ettervært, håper jeg oppdatterer denne kommentaren, navbaren er et bootstrap element-->
  <nav class="navbar navbar-expand-lg bg-body-tertiary"> 
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"><img src="Nettsidelogo.png" alt="Nettsidelogo" class="png"></a>
+    <a class="navbar-brand" href="../index.html"><img src="../Nettsidelogo.png" alt="Nettsidelogo" class="png"></a>
     <span id="authUserBadge"></span>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -56,6 +56,12 @@
     </div>
   </div>
 </nav>
+
+<div class="Tab"> 
+<svg width="192px" height="180px" class="yearnL6" data-d0="0.5" data-d1="" data-d2="110.4" data-d3="0"><text x="0" y="19.200000000000003px" font-size="12px" fill="#aaaaaa">1</text><text x="20px" y="14.399999999999999px" font-size="13.200000000000001px"
+  fill="#aaaaaa">120BPM</text><text x="12 12" y="52.800000000000004 77.6" font-size="33.599999999999994px" fill="#888888" pointer-events="none">44</text><path d="M 0,84 h 192 M 0,72 h 192 M 0,60 h 192 M 0,48 h 192 M 0,36 h 192 M 0,24 h 192M-1,24v60h1.2000000000000002v-60zM192,24v60h-1.2000000000000002v-60z" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="0.6000000000000001px" pointer-events="none"></path><path d="" fill="#aaaaaa" stroke="#aaaaaa" stroke-width="0.6000000000000001px" pointer-events="none"></path><!-- yellow box removed --><text x="" y="" font-size="15.120000000000001px" pointer-events="none"></text><path fill="#666666" style="transform: translate(105.4px, 40.8px) scale(4.08)" d="M.81381338.01543504c-.06524625.0276225-.10429875.1228725-.074295.1895475.00904875.009525.1038225.1228725.1990725.24765.21764624.24526874.25479374.30337123.30289499.41671873.19002374.38862.085725.88344373-.24717375 1.19633998-.02809875.0371475-.15097124.14097-.26622374.226695-.33099374.28479749-.48339374.44672248-.53959124.58959748-.02047875.03762375-.02047875.07477125-.02047875.1323975-.00904875.13192124 0 .14335124.39100124.59721748.53006624.63627.90963748 1.08251623.93916498 1.11061498l.02809875.0276225-.0371475-.01857375C.96621337 4.5136162.3785209 4.40931744.1794484 4.50456744c-.06715125.0276225-.10620375.066675-.13382625.13192125-.07667624.161925-.0561975.40005.05762625.74961749.1038225.31432499.31242.73104373.52054124 1.04393998.085725.13382624.24765.34194749.26622375.35147249.02809875.02809875.06715124.01857375.09477374 0 .02809875-.0371475.02809875-.06715125-.0276225-.13192125-.1990725-.2847975-.29384624-.87439498-.18049874-1.18729122.04619625-.14097.10429875-.21764625.20812124-.2657475.2752725-.1228725.88391999.0295275 1.13871373.28432125.01857375.01905.05762625.0581025.0762.06715124.06715125.02809875.161925-.00904875.19002374-.0762.0390525-.06715124.01857375-.1133475-.06715124-.21764624-.16002-.19002375-.64389-.75914248-.71056499-.84486748-.17145-.1990725-.24765-.38862-.26622374-.62674499-.00904875-.30337124.1133475-.62483999.34242374-.83534248.0276225-.0371475.150495-.14144625.26431874-.226695.3514725-.2943225.49482374-.45577124.550545-.60864748.0390525-.1228725.02047874-.23622-.06524626-.34051875-.0295275-.0276225-.36099749-.43719749-.74961748-.90201748C1.15623712.24403504.96621337.01543504.93859087.00591004c-.0390525-.00904875-.085725-.00904875-.1247775.009525z"></path></svg>
+</div>
+
 
 
   <!-- Login offcanvas som kommer opp når man ikke er logget inn, den kan ikke lukkes -->
@@ -102,31 +108,11 @@
       </aside>
     </div>
   </div>
-  
-  <!-- Top rated tabs som er midt på skjermen. Kan hende at jeg endrer den-->
-<main class="container py-5">
-   <div class="row justify-content-center">
-      <div class="col-md-6">
-        <section class="top-tabs card shadow-sm p-3">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h2 class="h5 mb-0">Top Tabs</h2>
-            <div class="btn-group btn-group-sm" role="group" aria-label="filters">
-            </div>
-          </div>
-
-          <ol class="tabs-list list-group list-group-numbered">
-            <li class="list-group-item"></li>
-            <li class="list-group-item"></li>
-            <li class="list-group-item"></li>
-          </ol>
-        </section>
-      </div>
-    </div>
-  </main>
 
   <!-- Scripts som loginen, off canvasen og kobling til bootstrap sitt javascript bibilotek.-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="login.js"></script>
-  <script src="offcanvas.js"></script>
+  <script src="../login.js"></script>
+  <script src="../offcanvas.js"></script>
+  <script src="../Createtab.js"></script>
 
 </body>

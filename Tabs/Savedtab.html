@@ -7,7 +7,7 @@
   <title>TabMaker</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../style.css">
   <style>
     .offcanvas.open {
       visibility: visible;
@@ -28,14 +28,14 @@
 
     <div class="sidebar-section"> 
       <p class="sidebar-title">Profile</p>
-      <a href="./Tabs/Profile.html" class="sidebar-item">My Profile</a>
+      <a href="Profile.html" class="sidebar-item">My Profile</a>
     </div>
 
     <div class="sidebar-section">
       <p class="sidebar-title">My tabs</p>
-      <a href="./Tabs/Createtab.html" class="sidebar-item">Create Tab</a>
-      <a href="./Tabs/Savedtab.html" class="sidebar-item">Saved Tabs</a>
-      <a href="./Tabs/Sharedtab.html" class="sidebar-item">Shared Tabs</a>
+      <a href="Createtab.html" class="sidebar-item">Create Tab</a>
+      <a href="Savedtab.html" class="sidebar-item active">Saved Tabs</a>
+      <a href="Sharedtab.html" class="sidebar-item">Shared Tabs</a>
     </div>
   </aside>
 
@@ -45,7 +45,7 @@
   <!-- Navbar med logoen, skal legge til mere ettervært, håper jeg oppdatterer denne kommentaren, navbaren er et bootstrap element-->
  <nav class="navbar navbar-expand-lg bg-body-tertiary"> 
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"><img src="Nettsidelogo.png" alt="Nettsidelogo" class="png"></a>
+    <a class="navbar-brand" href="../index.html"><img src="../Nettsidelogo.png" alt="Nettsidelogo" class="png"></a>
     <span id="authUserBadge"></span>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -102,26 +102,6 @@
       </aside>
     </div>
   </div>
-  
-  <!-- Top rated tabs som er midt på skjermen. Kan hende at jeg endrer den-->
-<main class="container py-5">
-   <div class="row justify-content-center">
-      <div class="col-md-6">
-        <section class="top-tabs card shadow-sm p-3">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h2 class="h5 mb-0">Top Tabs</h2>
-            <div class="btn-group btn-group-sm" role="group" aria-label="filters">
-            </div>
-          </div>
-
-          <ol class="tabs-list list-group list-group-numbered">
-            <li class="list-group-item"></li>
-            <li class="list-group-item"></li>
-            <li class="list-group-item"></li>
-          </ol>
-        </section>
-      </div>
-    </div>
   </main>
 
   <!-- Scripts som loginen, off canvasen og kobling til bootstrap sitt javascript bibilotek.-->
