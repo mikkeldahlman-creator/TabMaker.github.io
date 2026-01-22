@@ -137,11 +137,11 @@ body {
 #measures{
   display: flex;
   flex-direction: column;
-  gap: 24px;              /* space between measures */
 }
 
 /* keep your overlay working */
 .GitarTab{
   position: relative;
   display: inline-block;
+  width: 1000px;
 }
