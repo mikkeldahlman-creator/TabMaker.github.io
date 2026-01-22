@@ -8,19 +8,29 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
-  <style>
-    .offcanvas.open {
-      visibility: visible;
-      transform: translateX(0);
-    }
-  </style>
   <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 
 <body>
+<!-- Navbar med logoen, skal legge til mere ettervært, håper jeg oppdatterer denne kommentaren, navbaren er et bootstrap element-->
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="../index.html">
+      <img src="../Nettsidelogo.png" alt="Nettsidelogo" class="png">
+    </a>
+    <span id="authUserBadge"></span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav"></ul>
+    </div>
+  </div>
+</nav>
 
 <!-- Sidebar med tilgang til tabs og profile ja, du skjønner -->
-<div class="app-layout">
+<div class="sidelayout">
   <aside class="sidebar">
     <div class="sidebar-section">
       <input type="text" class="sidebar-search" placeholder="Search">
@@ -37,76 +47,72 @@
       <a href="Savedtab.html" class="sidebar-item">Saved Tabs</a>
       <a href="Sharedtab.html" class="sidebar-item active">Shared Tabs</a>
     </div>
-  </aside>
+ </aside>
 
   <!-- Conten gir lager en tom flexbox for bedre brukervenlighet og ja gennerel ser bedre ut.-->
   <div class="content">
 
-  <!-- Navbar med logoen, skal legge til mere ettervært, håper jeg oppdatterer denne kommentaren, navbaren er et bootstrap element-->
- <nav class="navbar navbar-expand-lg bg-body-tertiary"> 
-  <div class="container-fluid">
-    <a class="navbar-brand" href="../index.html"><img src="../Nettsidelogo.png" alt="Nettsidelogo" class="png"></a>
-    <span id="authUserBadge"></span>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-      </ul>
-    </div>
+
+
+    <!-- Main content area (tom foreløpig) -->
+    <main class="flex-grow-1 p-4">
+      <!-- Shared tabs content kommer her -->
+    </main>
+
   </div>
-</nav>
+</div>
 
-
-  <!-- Login offcanvas som kommer opp når man ikke er logget inn, den kan ikke lukkes -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="authPanel" aria-labelledby="offcanvasLabel" data-bs-backdrop="static" data-bs-keyboard="false">
+<!-- Login offcanvas som kommer opp når man ikke er logget inn, den kan ikke lukkes -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="authPanel"
+  aria-labelledby="offcanvasLabel" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasLabel">Profile</h5>
     <button id="authCloseBtn" type="button" class="btn-close"></button>
   </div>
-    <div class="offcanvas-body">
-      <aside class="auth-panel">
+  <div class="offcanvas-body">
+    <aside class="auth-panel">
 
-        <div id="authLoggedOut">
+      <div id="authLoggedOut">
 
-          <div class="d-flex gap-2 mb-3">
-            <button class="btn btn-sm btn-outline-dark active" data-tab="login">Logg inn</button>
-            <button class="btn btn-sm btn-outline-dark" data-tab="signup">Opprett profil</button>
-          </div>
-
-          <!-- Logg inn forms-->
-          <form id="loginForm" data-panel="login">
-            <input class="form-control mb-2" type="email" id="loginEmail" placeholder="E-post" required>
-            <input class="form-control mb-3" type="password" id="loginPass" placeholder="Passord" required>
-            <button class="btn btn-dark w-100 mb-2" type="submit">Logg inn</button>
-          </form>
-          <div id="loginMsg"></div>
-
-          <!-- Opprett bruker forms-->
-          <form id="signupForm" data-panel="signup" style="display:none;">
-            <input class="form-control mb-2" type="text" id="signupName" placeholder="Brukernavn">
-            <input class="form-control mb-2" type="email" id="signupEmail" placeholder="E-post" required>
-            <input class="form-control mb-3" type="password" id="signupPass" placeholder="Passord (min. 6 tegn)" required>
-            <button class="btn btn-dark w-100 mb-2" type="submit">Opprett profil</button>
-          </form>
-          <div id="signupMsg"></div>
-
+        <div class="d-flex gap-2 mb-3">
+          <button class="btn btn-sm btn-outline-dark active" data-tab="login">Logg inn</button>
+          <button class="btn btn-sm btn-outline-dark" data-tab="signup">Opprett profil</button>
         </div>
 
-        <!-- Innlogget -->
-        <div id="authLoggedIn" style="display:none;">
-          <p class="small text-muted mb-1" id="whoami"></p>
-          <p class="small text-muted mb-1" id="roleBadge"></p>
-          <button id="logoutBtn" class="btn btn-outline-dark w-100">Logg ut</button>
-        </div>
-      </aside>
-    </div>
+        <!-- Logg inn forms-->
+        <form id="loginForm" data-panel="login">
+          <input class="form-control mb-2" type="email" id="loginEmail" placeholder="E-post" required>
+          <input class="form-control mb-3" type="password" id="loginPass" placeholder="Passord" required>
+          <button class="btn btn-dark w-100 mb-2" type="submit">Logg inn</button>
+        </form>
+        <div id="loginMsg"></div>
+
+        <!-- Opprett bruker forms-->
+        <form id="signupForm" data-panel="signup" style="display:none;">
+          <input class="form-control mb-2" type="text" id="signupName" placeholder="Brukernavn">
+          <input class="form-control mb-2" type="email" id="signupEmail" placeholder="E-post" required>
+          <input class="form-control mb-3" type="password" id="signupPass" placeholder="Passord (min. 6 tegn)" required>
+          <button class="btn btn-dark w-100 mb-2" type="submit">Opprett profil</button>
+        </form>
+        <div id="signupMsg"></div>
+
+      </div>
+
+      <!-- Innlogget -->
+      <div id="authLoggedIn" style="display:none;">
+        <p class="small text-muted mb-1" id="whoami"></p>
+        <p class="small text-muted mb-1" id="roleBadge"></p>
+        <button id="logoutBtn" class="btn btn-outline-dark w-100">Logg ut</button>
+      </div>
+
+    </aside>
   </div>
-  </main>
+</div>
 
-  <!-- Scripts som loginen, off canvasen og kobling til bootstrap sitt javascript bibilotek.-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="login.js"></script>
-  <script src="offcanvas.js"></script>
+<!-- Scripts som loginen, off canvasen og kobling til bootstrap sitt javascript bibilotek.-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../login.js"></script>
+<script src="../offcanvas.js"></script>
 
 </body>
+</html>
