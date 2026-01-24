@@ -58,25 +58,68 @@
     <button class="btn btn-outline-dark mt-3" type="button" onclick="addtabg()">
       + Add 4/4
     </button>
+    <button class="btn btn-outline-dark mt-3" type="button" onclick="removetabg()">
+      - Remove 4/4
+    </button>
+     <div class="mt-3 d-flex align-items-center gap-3 flex-wrap">
+  <button id="autoScrollToggle" class="btn btn-outline-secondary" type="button">
+    ▶ Auto-scroll
+  </button>
+  <div style="min-width: 260px;">
+    <label for="autoScrollSpeed" class="form-label mb-1">Scroll speed</label>
+    <input
+      id="autoScrollSpeed"
+      type="range"
+      min="10"
+      max="400"
+      step="10"
+      value="120"
+      class="form-range"
+    />
+    <small id="autoScrollSpeedLabel">120 px/sec</small>
+    <div class="mt-3 d-flex gap-2 flex-wrap align-items-center">
+    <input id="tabTitle" class="form-control" style="max-width:260px" placeholder="Tab title" value="Untitled">
+
+    <button id="saveNewBtn" class="btn btn-outline-dark" type="button">Save New</button>
+    <button id="saveBtn" class="btn btn-dark" type="button">Save</button>
+
+    <input id="loadId" class="form-control" style="max-width:340px" placeholder="Paste tab id to load">
+    <button id="loadBtn" class="btn btn-outline-dark" type="button">Load</button>
+
+    <small id="saveStatus" class="text-muted"></small>
+</div>
+
   </div>
-  <div id="measures"><hr /></div>
+</div>
 
-<div class="GitarTab">
-  <img src="../Tab.jpg" class="GitarTabImg" alt="GitarTab">
+<hr/>
+<div id="measures">
+    <div class="GitarTab">
+      <img src="../Tab.jpg" class="GitarTabImg" alt="GitarTab">
 
-  <div class="tab-overlay">
-    <form class="tab-form" onsubmit="return false;">
-      <div class="tab-grid">
-        <!-- 24 inputs -->
-        <input><input><input><input>
-        <input><input><input><input>
-        <input><input><input><input>
-        <input><input><input><input>
-        <input><input><input><input>
-        <input><input><input><input>
+      <div class="tab-overlay">
+        <form class="tab-form" onsubmit="return false;">
+          <div class="tab-grid">
+            <!-- 24 inputs -->
+            <input><input><input><input>
+            <input><input><input><input>
+            <input><input><input><input>
+            <input><input><input><input>
+            <input><input><input><input>
+            <input><input><input><input>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   </div>
+  <hr/>
+   <button
+        type="button"
+        class="btn btn-danger btn-floating btn-lg"
+        id="btn-back-to-top"
+        >
+  <i class="fas fa-arrow-up"></i>
+</button>
 </main>
 
 <!-- Login offcanvas som kommer opp når man ikke er logget inn, den kan ikke lukkes -->
@@ -134,8 +177,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../login.js"></script>
 <script src="../offcanvas.js"></script>
-<script src="../Createtab.js"></script>
-<script src="../addtabg.js"></script>
+<script src="../tabmanager.js"></script>
+<script src="../Mytabs.js"></script>
 
 </body>
 </html>
