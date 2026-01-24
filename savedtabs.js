@@ -1,3 +1,19 @@
+function waitForSupabaseClient(timeoutMs = 8000) {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const t = setInterval(() => {
+      if (window.supabaseClient) {
+        clearInterval(t);
+        resolve(window.supabaseClient);
+      } else if (Date.now() - start > timeoutMs) {
+        clearInterval(t);
+        reject(new Error("Timed out waiting for supabaseClient"));
+      }
+    }, 50);
+  });
+}
+
+
 function getSB() {
   if (!window.supabaseClient) throw new Error("supabaseClient not ready");
   return window.supabaseClient;

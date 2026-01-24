@@ -114,7 +114,7 @@ async function loadTabById(tabId) {
   return data;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const status = document.getElementById("saveStatus");
   const titleInput = document.getElementById("tabTitle");
 
@@ -122,6 +122,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveBtn = document.getElementById("saveBtn");
   const loadBtn = document.getElementById("loadBtn");
   const loadId = document.getElementById("loadId");
+
+  // Auto-load tab from URL parameter
+  const params = new URLSearchParams(window.location.search);
+  const tabId = params.get("tab");
+  
+  if (tabId) {
+    try {
+      if (status) status.textContent = "Loading tab...";
+      
+      const saved = await loadTabById(tabId);
+      if (titleInput) titleInput.value = saved.title || "Untitled";
+      renderTabData(saved.data);
+      
+      if (status) status.textContent = `Loaded ✅ id: ${saved.id}`;
+    } catch (e) {
+      console.error(e);
+      if (status) status.textContent = `Load failed ❌ ${e.message || e}`;
+    }
+  }
 
   function setStatus(msg) {
     if (status) status.textContent = msg;
