@@ -1,3 +1,5 @@
+// savedtabs.js — Saved Tabs with Open / Share / Delete
+
 function waitForSupabaseClient(timeoutMs = 8000) {
   return new Promise((resolve, reject) => {
     const start = Date.now();
@@ -13,7 +15,6 @@ function waitForSupabaseClient(timeoutMs = 8000) {
   });
 }
 
-
 function getSB() {
   if (!window.supabaseClient) throw new Error("supabaseClient not ready");
   return window.supabaseClient;
@@ -21,20 +22,22 @@ function getSB() {
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
   }[c]));
 }
 
+// ---------- LOAD MY TABS ----------
 async function listMyTabs() {
   const sb = getSB();
 
-  // must be logged in
   const { data: { user }, error: userErr } = await sb.auth.getUser();
   if (userErr) throw userErr;
   if (!user) throw new Error("Not logged in");
 
-  // RLS should already limit rows to user_id = auth.uid(),
-  // but we can filter too
   const { data, error } = await sb
     .from("tabs")
     .select("id, title, created_at")
@@ -44,6 +47,7 @@ async function listMyTabs() {
   return data || [];
 }
 
+// ---------- RENDER ----------
 function renderTabsList(tabs) {
   const list = document.getElementById("savedTabsList");
   const msg = document.getElementById("savedTabsMsg");
@@ -67,10 +71,20 @@ function renderTabsList(tabs) {
         </div>
 
         <div class="d-flex gap-2">
-          <a class="btn btn-sm btn-outline-dark" href="Createtab.html?tab=${encodeURIComponent(t.id)}">
+          <a class="btn btn-sm btn-outline-dark"
+             href="./Createtab.html?tab=${encodeURIComponent(t.id)}">
             Open
           </a>
-          <button class="btn btn-sm btn-outline-danger" data-del="${esc(t.id)}">
+
+          <button class="btn btn-sm btn-outline-primary"
+                  type="button"
+                  data-share="${esc(t.id)}">
+            Share
+          </button>
+
+          <button class="btn btn-sm btn-outline-danger"
+                  type="button"
+                  data-del="${esc(t.id)}">
             Delete
           </button>
         </div>
@@ -78,19 +92,24 @@ function renderTabsList(tabs) {
     `;
   }).join("");
 
-  // hook delete buttons
-  list.querySelectorAll("[data-del]").forEach(btn => {
+  hookDeleteButtons();
+  hookShareButtons();
+}
+
+// ---------- DELETE ----------
+function hookDeleteButtons() {
+  document.querySelectorAll("[data-del]").forEach(btn => {
     btn.addEventListener("click", async () => {
-      const id = btn.getAttribute("data-del");
+      const id = btn.dataset.del;
       if (!id) return;
-      const ok = confirm("Delete this tab?");
-      if (!ok) return;
+
+      if (!confirm("Delete this tab?")) return;
 
       try {
         const sb = getSB();
         const { error } = await sb.from("tabs").delete().eq("id", id);
         if (error) throw error;
-        btn.closest("div.border")?.remove();
+        btn.closest(".border")?.remove();
       } catch (e) {
         alert("Delete failed: " + (e.message || e));
       }
@@ -98,10 +117,58 @@ function renderTabsList(tabs) {
   });
 }
 
+// ---------- SHARE ----------
+function hookShareButtons() {
+  document.querySelectorAll("[data-share]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const tabId = btn.dataset.share;
+      if (!tabId) return;
+
+      const username = prompt("Share with username:");
+      if (!username) return;
+
+      const perm = (prompt("Permission: read or write", "read") || "")
+        .trim()
+        .toLowerCase();
+
+      if (!["read", "write"].includes(perm)) {
+        alert("Permission must be 'read' or 'write'");
+        return;
+      }
+
+      try {
+        const sb = getSB();
+
+        // find user
+        const { data: prof, error: profErr } = await sb
+          .from("profiles")
+          .select("id")
+          .eq("username", username)
+          .single();
+
+        if (profErr) throw profErr;
+
+        // create share
+        const { error } = await sb
+          .from("tab_shares")
+          .insert([{ tab_id: tabId, shared_with: prof.id, permission: perm }]);
+
+        if (error) throw error;
+
+        alert(`Shared ✅ with ${username} (${perm})`);
+      } catch (e) {
+        alert("Share failed: " + (e.message || e));
+      }
+    });
+  });
+}
+
+// ---------- INIT ----------
 async function initSavedTabs() {
   const msg = document.getElementById("savedTabsMsg");
   try {
     if (msg) msg.textContent = "Loading...";
+    await waitForSupabaseClient();
     const tabs = await listMyTabs();
     renderTabsList(tabs);
   } catch (e) {
