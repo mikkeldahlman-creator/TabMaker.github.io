@@ -14,16 +14,25 @@
 <body>
 
 <!-- Navbar med logoen, skal legge til mere ettervært, håper jeg oppdatterer denne kommentaren, navbaren er et bootstrap element-->
-<nav class="navbar navbar-expand-lg bg-body-tertiary"> 
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"><img src="../Nettsidelogo.png" alt="Nettsidelogo" class="png"></a>
+    <a class="navbar-brand" href="../index.html">
+      <img src="../Nettsidelogo.png" alt="Nettsidelogo" class="png">
+    </a>
+
+    <!-- Username shown here -->
+    <span id="navbarUser" class="ms-auto me-3 small text-muted"></span>
+
+    <!-- Optional role badge / login state -->
     <span id="authUserBadge"></span>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-      </ul>
+      <ul class="navbar-nav"></ul>
     </div>
   </div>
 </nav>
@@ -100,7 +109,9 @@
 
   <!-- Scripts som loginen, off canvasen og kobling til bootstrap sitt javascript bibilotek.-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="login.js"></script>
-  <script src="offcanvas.js"></script>
+  <script src="../login.js"></script>
+  <script src="../offcanvas.js"></script>
+  <script src="../tabmanager.js"></script>
+  <script src="../Mytabs.js"></script>
 
 </body>

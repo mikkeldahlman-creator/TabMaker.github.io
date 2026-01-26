@@ -43,11 +43,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Supabase initialization failed — auth disabled', err);
     return; // abort auth setup
   }
+
   // Elements
   const panel = document.getElementById('authPanel');
   const openBtn = document.getElementById('authOpenBtn');
   const closeBtn = document.getElementById('authCloseBtn');
   const userBadge = document.getElementById('authUserBadge');
+
+  // ✅ Navbar username display (add <span id="navbarUser"></span> in navbar)
+  const navbarUser = document.getElementById('navbarUser');
 
   const loggedOut = document.getElementById('authLoggedOut');
   const loggedIn = document.getElementById('authLoggedIn');
@@ -97,21 +101,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (loggedOut) loggedOut.style.display = '';
         if (loggedIn) loggedIn.style.display = 'none';
         if (userBadge) userBadge.textContent = '';
+        if (navbarUser) navbarUser.textContent = ''; // ✅ clear navbar
         return;
       }
 
-      // Try reading `profiles` table for role (optional)
+      // Try reading `profiles` table for role + username (optional)
       let role = 'user';
+      let profile = null;
+
       try {
-        const { data: profile, error } = await supabaseClient
+        const { data, error } = await supabaseClient
           .from('profiles')
-          .select('role')
+          .select('role, username') // ✅ fetch username too
           .eq('id', user.id)
           .maybeSingle();
-        if (!error && profile) role = profile.role ?? 'user';
-        console.log('profile query', profile, error);
+
+        if (!error && data) {
+          profile = data;
+          role = data.role ?? 'user';
+        }
+        console.log('profile query', data, error);
       } catch (err) {
         console.warn('profiles query failed', err.message || err);
+      }
+
+      // ✅ Set navbar username (fallback to display_name -> email)
+      if (navbarUser) {
+        const name =
+          profile?.username ||
+          user.user_metadata?.display_name ||
+          user.email;
+
+        navbarUser.textContent = name;
+        navbarUser.title = `User ID: ${user.id}`; // hover shows id
       }
 
       if (loggedOut) loggedOut.style.display = 'none';
@@ -119,6 +141,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (whoami) whoami.textContent = `Innlogget som ${user.email}`;
       if (roleBadge) roleBadge.textContent = `Rolle: ${role}`;
       if (userBadge) userBadge.textContent = role === 'admin' ? 'Admin' : 'Innlogget';
+
       // If page provides the offcanvas helper, allow closing (useful after a reload)
       if (typeof window.allowOffcanvasClose === 'function') {
         try { window.allowOffcanvasClose(); } catch (e) { /* ignore */ }
@@ -143,7 +166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (loginMsg) loginMsg.textContent = 'Feil: ' + error.message;
         return;
       }
-      if (loginMsg) loginMsg.textContent = 'Innlogget ✅';
+      if (loginMsg) loginMsg.textContent = 'Innlogget';
       await refreshAuthUI();
       // Prefer using the page-level helper to close offcanvas when available
       if (typeof window.allowOffcanvasClose === 'function') {
@@ -178,7 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (signupMsg) signupMsg.textContent = 'Feil: ' + error.message;
         return;
       }
-      if (signupMsg) signupMsg.textContent = 'Konto opprettet ✅';
+      if (signupMsg) signupMsg.textContent = 'Konto opprettet';
       console.log('signUp success', data);
     } catch (err) {
       console.error('Unexpected signUp error', err);
