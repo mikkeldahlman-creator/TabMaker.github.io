@@ -85,7 +85,7 @@ async function updateTabInSupabase(tabId, title = "Untitled") {
 
   const { data, error } = await sb
     .from("tabs")
-    .update({ title, data: payload })   // ✅ removed updated_at
+    .update({ title, data: payload })
     .eq("id", tabId)
     .select("id, title, data")
     .single();
@@ -135,10 +135,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (titleInput) titleInput.value = saved.title || "Untitled";
       renderTabData(saved.data);
       
-      if (status) status.textContent = `Loaded ✅ id: ${saved.id}`;
+      if (status) status.textContent = `Loaded id: ${saved.id}`;
     } catch (e) {
       console.error(e);
-      if (status) status.textContent = `Load failed ❌ ${e.message || e}`;
+      if (status) status.textContent = `Load failed: ${e.message || e}`;
     }
   }
 
@@ -152,10 +152,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         setStatus("Saving new...");
         const title = (titleInput?.value || "Untitled").trim() || "Untitled";
         const saved = await saveNewTabToSupabase(title);
-        setStatus(`Saved new ✅ id: ${saved.id}`);
+        setStatus(`Saved new id: ${saved.id}`);
       } catch (e) {
         console.error(e);
-        setStatus(`Save failed ❌ ${e.message || e}`);
+        setStatus(`Save failed: ${e.message || e}`);
       }
     });
   }
@@ -166,10 +166,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         setStatus(currentTabId ? "Saving..." : "Saving new...");
         const title = (titleInput?.value || "Untitled").trim() || "Untitled";
         const saved = await saveTab(title);
-        setStatus(`Saved ✅ id: ${saved.id}`);
+        setStatus(`Saved id: ${saved.id}`);
       } catch (e) {
         console.error(e);
-        setStatus(`Save failed ❌ ${e.message || e}`);
+        setStatus(`Save failed: ${e.message || e}`);
       }
     });
   }
@@ -183,10 +183,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const saved = await loadTabById(id);
         if (titleInput) titleInput.value = saved.title || "Untitled";
         renderTabData(saved.data);
-        setStatus(`Loaded ✅ id: ${saved.id}`);
+        setStatus(`Loaded id: ${saved.id}`);
       } catch (e) {
         console.error(e);
-        setStatus(`Load failed ❌ ${e.message || e}`);
+        setStatus(`Load failed: ${e.message || e}`);
       }
     });
   }
