@@ -38,9 +38,11 @@ async function listMyTabs() {
   if (userErr) throw userErr;
   if (!user) throw new Error("Not logged in");
 
+  // ✅ ONLY tabs you OWN
   const { data, error } = await sb
     .from("tabs")
     .select("id, title, created_at")
+    .eq("user_id", user.id)                 // <-- THIS is the key line
     .order("created_at", { ascending: false });
 
   if (error) throw error;

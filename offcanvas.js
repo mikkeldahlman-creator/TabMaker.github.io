@@ -1,10 +1,10 @@
-// main.js — simplified and commented
+// offcanvas.js — open authPanel ONLY if NOT logged in (Supabase-aware)
+
 document.addEventListener('DOMContentLoaded', function () {
   const offEl = document.getElementById('authPanel');
-  const authLoggedIn = document.getElementById('authLoggedIn');
-  const authLoggedOut = document.getElementById('authLoggedOut');
-  const authUserBadge = document.getElementById('authUserBadge');
   const closeBtn = document.getElementById('authCloseBtn');
+
+  if (!offEl) return;
 
   let allowClose = false;
 
@@ -19,62 +19,73 @@ document.addEventListener('DOMContentLoaded', function () {
     if (inst) inst.show();
   }
 
+  function hideOffcanvas() {
+    const inst = offcanvasInstance();
+    if (inst) inst.hide();
+  }
+
   function preventHideIfNeeded(e) {
     if (!allowClose) e.preventDefault();
   }
 
-  // Block programmatic hiding unless `allowClose` is true
-  if (offEl) offEl.addEventListener('hide.bs.offcanvas', preventHideIfNeeded);
+  // Block hiding unless allowClose = true
+  offEl.addEventListener('hide.bs.offcanvas', preventHideIfNeeded);
 
   // Close button only works after login
   if (closeBtn) {
     closeBtn.addEventListener('click', function () {
-      if (allowClose) {
-        const inst = offcanvasInstance();
-        if (inst) inst.hide();
-      }
+      if (allowClose) hideOffcanvas();
     });
   }
 
-  // Public helper: call after a successful login to allow closing
+  // Public helper: login.js calls this after login
   window.allowOffcanvasClose = function () {
     allowClose = true;
-    const inst = offcanvasInstance();
-    if (inst) inst.hide();
+    hideOffcanvas();
   };
 
-  // If Supabase is present, the auth flow is handled in `login.js`.
-  // Only attach the fallback local login handler when Supabase isn't loaded.
-  const loginForm = document.getElementById('loginForm');
-  if (loginForm) {
-    if (typeof window.supabase !== 'undefined' || typeof window.supabaseClient !== 'undefined') {
-      console.log('Supabase detected — skipping login.js fallback login handler');
-    } else {
-      loginForm.addEventListener('submit', function (ev) {
-        ev.preventDefault();
-        const email = (document.getElementById('loginEmail') || {}).value || '';
-
-        // Mark user as logged in in the UI
-        if (authUserBadge) authUserBadge.textContent = email;
-        if (authLoggedOut) authLoggedOut.style.display = 'none';
-        if (authLoggedIn) authLoggedIn.style.display = 'block';
-        if (document.getElementById('whoami')) document.getElementById('whoami').textContent = email;
-
-        // Allow and trigger closing the offcanvas
-        window.allowOffcanvasClose();
-      });
-    }
+  // Wait for Supabase client created by login.js
+  function waitForSupabaseClient(timeoutMs = 8000) {
+    return new Promise((resolve, reject) => {
+      const start = Date.now();
+      const t = setInterval(() => {
+        if (window.supabaseClient) {
+          clearInterval(t);
+          resolve(window.supabaseClient);
+        } else if (Date.now() - start > timeoutMs) {
+          clearInterval(t);
+          reject(new Error('Timed out waiting for supabaseClient'));
+        }
+      }, 50);
+    });
   }
 
-  // Auto-open the offcanvas if the page appears unauthenticated
-  const isLoggedIn = function () {
-    if (authLoggedIn) {
-      const st = window.getComputedStyle(authLoggedIn);
-      if (st && st.display !== 'none' && authLoggedIn.offsetHeight > 0) return true;
-    }
-    if (authUserBadge && authUserBadge.textContent && authUserBadge.textContent.trim().length) return true;
-    return false;
-  };
+  // Decide whether to open based on REAL auth state
+  (async function init() {
+    try {
+      // If login.js hasn't run / Supabase not available, fall back to opening
+      const sb = await waitForSupabaseClient(4000).catch(() => null);
+      if (!sb) {
+        showOffcanvas();
+        return;
+      }
 
-  if (!isLoggedIn()) showOffcanvas();
+      const { data: { user }, error } = await sb.auth.getUser();
+      if (error) console.warn('auth.getUser error', error);
+
+      if (user) {
+        // Logged in → don't force open; allow closing if it was open
+        allowClose = true;
+        hideOffcanvas();
+      } else {
+        // Not logged in → force open and block closing
+        allowClose = false;
+        showOffcanvas();
+      }
+    } catch (e) {
+      console.warn('offcanvas init failed, opening auth panel as fallback', e);
+      allowClose = false;
+      showOffcanvas();
+    }
+  })();
 });
