@@ -1,22 +1,35 @@
-// login.js — En login løsning laget med hjelp av Supabase.
+// login.js — Innlogging/bruker-kontoer med Supabase
+// Hovedidé: 
+// 1) Sørge for at Supabase-biblioteket er lastet
+// 2) Lage en Supabase-klient som resten av siden kan bruke
+// 3) Håndtere logg inn / registrer / logg ut
+// 4) Oppdatere UI (vise riktig knapp/tekst) ut fra om du er innlogget
 
-// Denne passer på at supabase fungerer, hvis ikke så sier den ifra i console.
+
+// ============================
+// DEL 1: Laste inn Supabase-script hvis det mangler
+// ============================
+
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script');
     s.src = src;
     s.async = true;
     s.onload = () => resolve();
-    s.onerror = (e) => reject(new Error('Failed loading script: ' + src));
+    s.onerror = () => reject(new Error('Failed loading script: ' + src));
     document.head.appendChild(s);
   });
 }
 
+
+// ============================
+// DEL 2: Sørge for at Supabase-klient finnes (window.supabaseClient)
+// ============================
+
 async function ensureSupabaseClient() {
   if (window.supabase && typeof window.supabase.createClient === 'function') {
-    // UMD already available
+    // ok
   } else {
-    // Try a more reliable CDN fallback
     try {
       await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js');
     } catch (err) {
@@ -25,94 +38,106 @@ async function ensureSupabaseClient() {
     }
   }
 
-  // Create client and expose globally for other scripts
   const client = window.supabase.createClient(
     'https://wrnrzuqftbzajeeavxjr.supabase.co',
     'sb_publishable_H2Ih9F-avhk-wDMHqCcfYw_NXDmI4yD'
   );
+
   window.supabaseClient = client;
   console.log('login.js initialized supabaseClient');
   return client;
 }
 
+
+// ============================
+// DEL 3: Starte alt når siden er lastet ferdig
+// ============================
+
 document.addEventListener('DOMContentLoaded', async () => {
+
   let supabaseClient;
   try {
     supabaseClient = await ensureSupabaseClient();
   } catch (err) {
     console.error('Supabase initialization failed — auth disabled', err);
-    return; // abort auth setup
+    return;
   }
 
-  // Elements
+
+  // ============================
+  // DEL 4: Hente HTML-elementer
+  // ============================
+
   const panel = document.getElementById('authPanel');
   const openBtn = document.getElementById('authOpenBtn');
   const closeBtn = document.getElementById('authCloseBtn');
   const userBadge = document.getElementById('authUserBadge');
 
-  // ✅ Navbar username display (add <span id="navbarUser"></span> in navbar)
   const navbarUser = document.getElementById('navbarUser');
 
   const loggedOut = document.getElementById('authLoggedOut');
   const loggedIn = document.getElementById('authLoggedIn');
+
   const whoami = document.getElementById('whoami');
   const roleBadge = document.getElementById('roleBadge');
 
   const tabButtons = document.querySelectorAll('[data-tab]');
+
   const loginForm = document.getElementById('loginForm');
   const signupForm = document.getElementById('signupForm');
   const loginMsg = document.getElementById('loginMsg');
   const signupMsg = document.getElementById('signupMsg');
 
-  console.log('Auth elements:', { panel, openBtn, closeBtn, loginForm, signupForm });
-
-  // Guard: if essential elements missing, abort
   if (!loginForm || !signupForm) {
     console.warn('Login/signup forms not found — aborting auth init');
     return;
   }
 
-  // Open/close handlers (optional)
-  if (openBtn && panel) openBtn.addEventListener('click', () => panel.classList.add('show'));
-  if (closeBtn && panel) closeBtn.addEventListener('click', () => panel.classList.remove('show'));
 
-  // Bytter imellom opprett bruker og logg inn.
+  // ============================
+  // DEL 5: Bytte mellom login / signup
+  // ============================
+
   tabButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       tabButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
+
       const tab = btn.dataset.tab;
-      if (loginForm) loginForm.style.display = tab === 'login' ? '' : 'none';
-      if (signupForm) signupForm.style.display = tab === 'signup' ? '' : 'none';
+      loginForm.style.display = tab === 'login' ? '' : 'none';
+      signupForm.style.display = tab === 'signup' ? '' : 'none';
     });
   });
 
-  // Refresh UI (with simple re-entrancy guard)
+
+  // ============================
+  // DEL 6: Oppdatere UI basert på login-status
+  // ============================
+
   let _refreshing = false;
+
   async function refreshAuthUI() {
     if (_refreshing) return;
     _refreshing = true;
-    console.log('refreshAuthUI start');
+
     try {
       const { data: { user } } = await supabaseClient.auth.getUser();
-      console.log('getUser ->', user);
 
       if (!user) {
-        if (loggedOut) loggedOut.style.display = '';
-        if (loggedIn) loggedIn.style.display = 'none';
+        loggedOut.style.display = '';
+        loggedIn.style.display = 'none';
         if (userBadge) userBadge.textContent = '';
-        if (navbarUser) navbarUser.textContent = ''; // ✅ clear navbar
+        if (navbarUser) navbarUser.textContent = '';
         return;
       }
 
-      // Try reading `profiles` table for role + username (optional)
       let role = 'user';
       let profile = null;
 
       try {
         const { data, error } = await supabaseClient
           .from('profiles')
-          .select('role, username') // ✅ fetch username too
+          .select('role, username')
           .eq('id', user.id)
           .maybeSingle();
 
@@ -120,12 +145,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           profile = data;
           role = data.role ?? 'user';
         }
-        console.log('profile query', data, error);
       } catch (err) {
         console.warn('profiles query failed', err.message || err);
       }
 
-      // ✅ Set navbar username (fallback to display_name -> email)
       if (navbarUser) {
         const name =
           profile?.username ||
@@ -133,19 +156,19 @@ document.addEventListener('DOMContentLoaded', async () => {
           user.email;
 
         navbarUser.textContent = name;
-        navbarUser.title = `User ID: ${user.id}`; // hover shows id
       }
 
-      if (loggedOut) loggedOut.style.display = 'none';
-      if (loggedIn) loggedIn.style.display = '';
-      if (whoami) whoami.textContent = `Innlogget som ${user.email}`;
-      if (roleBadge) roleBadge.textContent = `Rolle: ${role}`;
-      if (userBadge) userBadge.textContent = role === 'admin' ? 'Admin' : 'Innlogget';
+      loggedOut.style.display = 'none';
+      loggedIn.style.display = '';
 
-      // If page provides the offcanvas helper, allow closing (useful after a reload)
+      if (whoami) whoami.textContent = `Logged in as ${user.email}`;
+      if (roleBadge) roleBadge.textContent = `Role: ${role}`;
+      if (userBadge) userBadge.textContent = role === 'admin' ? 'Admin' : 'Logged in';
+
       if (typeof window.allowOffcanvasClose === 'function') {
-        try { window.allowOffcanvasClose(); } catch (e) { /* ignore */ }
+        window.allowOffcanvasClose();
       }
+
     } catch (err) {
       console.error('refreshAuthUI error', err);
     } finally {
@@ -153,63 +176,82 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Login
+
+  // ============================
+  // DEL 7: Login
+  // ============================
+
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (loginMsg) loginMsg.textContent = 'Logger inn...';
+
+    if (loginMsg) loginMsg.textContent = 'Logging in...';
+
     const email = document.getElementById('loginEmail').value.trim();
     const pass = document.getElementById('loginPass').value;
+
     try {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+      const { error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password: pass
+      });
+
       if (error) {
-        console.error('signIn error', error);
-        if (loginMsg) loginMsg.textContent = 'Feil: ' + error.message;
+        if (loginMsg) loginMsg.textContent = 'Error: ' + error.message;
         return;
       }
-      if (loginMsg) loginMsg.textContent = 'Innlogget';
+
+      if (loginMsg) loginMsg.textContent = 'Logged in';
       await refreshAuthUI();
-      // Prefer using the page-level helper to close offcanvas when available
+
       if (typeof window.allowOffcanvasClose === 'function') {
         window.allowOffcanvasClose();
       } else {
-        setTimeout(() => {
-          if (panel) panel.classList.remove('show');
-        }, 400);
+        setTimeout(() => panel?.classList.remove('show'), 400);
       }
-      console.log('signIn success', data);
+
     } catch (err) {
-      console.error('Unexpected signIn error', err);
-      if (loginMsg) loginMsg.textContent = 'Uventet feil';
+      if (loginMsg) loginMsg.textContent = 'Unexpected error';
     }
   });
 
-  // Signup
+
+  // ============================
+  // DEL 8: Signup
+  // ============================
+
   signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (signupMsg) signupMsg.textContent = 'Oppretter...';
+
+    if (signupMsg) signupMsg.textContent = 'Creating account...';
+
     const name = document.getElementById('signupName').value.trim();
     const email = document.getElementById('signupEmail').value.trim().toLowerCase();
     const pass = document.getElementById('signupPass').value;
+
     try {
-      const { data, error } = await supabaseClient.auth.signUp({
+      const { error } = await supabaseClient.auth.signUp({
         email,
         password: pass,
         options: { data: { display_name: name } },
       });
+
       if (error) {
-        console.error('signUp error', error);
-        if (signupMsg) signupMsg.textContent = 'Feil: ' + error.message;
+        if (signupMsg) signupMsg.textContent = 'Error: ' + error.message;
         return;
       }
-      if (signupMsg) signupMsg.textContent = 'Konto opprettet';
-      console.log('signUp success', data);
+
+      if (signupMsg) signupMsg.textContent = 'Account created';
+
     } catch (err) {
-      console.error('Unexpected signUp error', err);
-      if (signupMsg) signupMsg.textContent = 'Uventet feil';
+      if (signupMsg) signupMsg.textContent = 'Unexpected error';
     }
   });
 
-  // Logout
+
+  // ============================
+  // DEL 9: Logout
+  // ============================
+
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
@@ -218,13 +260,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Keep UI in sync
+
+  // ============================
+  // DEL 10: Holde UI oppdatert
+  // ============================
+
   try {
     supabaseClient.auth.onAuthStateChange(() => refreshAuthUI());
   } catch (err) {
     console.warn('onAuthStateChange not available', err);
   }
 
-  // Initial UI update
   refreshAuthUI();
 });

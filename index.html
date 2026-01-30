@@ -13,17 +13,17 @@
 
 <body>
 
-<!-- Navbar med logoen, skal legge til mere ettervært, håper jeg oppdatterer denne kommentaren, navbaren er et bootstrap element-->
+<!-- Navbar med logoen, navbaren er et bootstrap element-->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="../index.html">
       <img src="Nettsidelogo.png" alt="Nettsidelogo" class="png">
     </a>
 
-    <!-- Username shown here -->
+    <!-- Bruker navn vises her-->
     <span id="navbarUser" class="ms-auto me-3 small text-muted"></span>
 
-    <!-- Optional role badge / login state -->
+    <!-- rollebagden sånn admin eller / login status -->
     <span id="authUserBadge"></span>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -56,9 +56,6 @@
       <a href="Tabs/Sharedtab.html" class="sidebar-item">Shared Tabs</a>
     </div>
  </aside>
-
-<!-- Conten gir lager en tom flexbox for bedre brukervenlighet og ja gennerel ser bedre ut.-->
-<div class="content">
 
 <!-- Login offcanvas som kommer opp når man ikke er logget inn, den kan ikke lukkes -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="authPanel" aria-labelledby="offcanvasLabel" data-bs-backdrop="static" data-bs-keyboard="false">

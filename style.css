@@ -1,7 +1,3 @@
-/* =========================
-   GLOBAL
-========================= */
-
 html, body {
   height: 100%;
   margin: 0;
@@ -13,7 +9,7 @@ body {
 }
 
 /* =========================
-   NAVBAR LOGO
+   NAVBAR-LOGO
 ========================= */
 
 .png {
@@ -23,12 +19,12 @@ body {
 }
 
 /* =========================
-   LAYOUT
+   LAYOUT / OPPSETT
 ========================= */
 
 .sidelayout {
   display: flex;
-  min-height: calc(100vh - 56px); /* navbar height */
+  min-height: calc(100vh - 56px); /* høyden på navbar */
 }
 
 /* =========================
@@ -71,7 +67,7 @@ body {
   font-weight: 500;
 }
 
-/* Search */
+/* Søkefelt */
 .sidebar-search {
   width: 100%;
   padding: 6px 8px;
@@ -81,7 +77,7 @@ body {
 }
 
 /* =========================
-   CONTENT AREA
+   HOVEDINNHOLD
 ========================= */
 
 .content {
@@ -91,64 +87,67 @@ body {
 }
 
 /* =========================
-   Login offcanvas
+   LOGIN OFFCANVAS
 ========================= */
+
 .offcanvas.open {
   visibility: visible;
   transform: translateX(0);
 }
 
-.GitarTabImg{
-  width: 1000px;     /* or keep your 50% / max-width approach */
+/* Bilde av gitar-tab */
+.GitarTabImg {
+  width: 1000px;
   max-width: 100%;
   height: auto;
   display: block;
-  pointer-events: none;  /* image won’t steal clicks */
+  pointer-events: none; /* bildet stjeler ikke klikk */
 }
 
-/* Overlay anchored to the STAFF region (percentages of the image) */
-.tab-overlay{
+/* Overlay som legges over bildet */
+.tab-overlay {
   position: absolute;
   left: 18%;
   top: 0%;
   width: 74%;
-  height: 16%;  
+  height: 16%;
   z-index: 2;
 }
 
-/* 4 beats x 6 strings, fits inside the staff region */
-.tab-grid{
+/* 4 slag x 6 strenger, passer innenfor tab-området */
+.tab-grid {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* auto fit across staff width */
-  place-items: center;                   /* centers input in each cell */
+  grid-template-columns: repeat(4, 1fr); /* automatisk bredde over taben */
+  place-items: center;                   /* sentrerer input i hver celle */
 }
 
-/* Inputs size relative to the cell so they never overflow */
-.tab-grid input{
+/* Størrelse på input-feltene slik at de ikke flyter utenfor */
+.tab-grid input {
   width: 20%;
   height: 70%;
   text-align: center;
   box-sizing: border-box;
 }
 
-/* each measure sits under the previous one */
-#measures{
+/* Hver takt plasseres under den forrige */
+#measures {
   display: flex;
   flex-direction: column;
 }
 
-/* keep your overlay working */
-.GitarTab{
+/* Holder overlayet riktig plassert */
+.GitarTab {
   position: relative;
   display: inline-block;
   width: 1000px;
 }
 
+/* Tilbake-til-toppen-knapp */
 #btn-back-to-top {
-position: fixed;
-bottom: 20px;
-right: 20px;
-display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
 }
